@@ -27,6 +27,9 @@ function generate_starting_values(; hSets, hData, hParameters)
 
     (; parameters, data) = prepare_initial_calibrated_parameters(data=data, sets=sets, parameters=parameters, hData=hData)
 
+    # Factor-augmenting technical change (GTAP afe), 1 in the base
+    data["afe"] = NamedArray(ones(size(data["α_qfe"])), names(data["α_qfe"]))
+
     # Prepare a set of fixed parameters
     (; comm, reg) = NamedTuple(Dict(Symbol(k) => sets[k] for k ∈ ["comm", "reg"]))
     fixed = Dict(
@@ -38,7 +41,7 @@ function generate_starting_values(; hSets, hData, hParameters)
             else
                 true
             end
-        end for (k) in ["to", "tfe", "tx", "txs", "tm", "tms", "tfd", "tfm", "tpd", "tpm", "tgd", "tgm", "tid", "tim", "tinc", "qesf", "qe", "α_qintva", "γ_qintva", "α_qfa", "γ_qfa", "α_qfe", "γ_qfe", "α_qfdqfm", "γ_qfdqfm", "α_qca", "γ_qca", "α_pca", "γ_pca", "σyp", "σyg", "β_qpa", "α_qpdqpm", "γ_qpdqpm", "α_qga", "γ_qga", "α_qgdqgm", "γ_qgdqgm", "α_qia", "γ_qia", "α_qidqim", "γ_qidqim", "α_qxs", "γ_qxs", "α_qtmfsd", "α_qst", "γ_qst", "α_qes2", "γ_qes2", "α_qinv", "δ", "ρ", "pop", "ppa"]
+        end for (k) in ["to", "tfe", "tx", "txs", "tm", "tms", "tfd", "tfm", "tpd", "tpm", "tgd", "tgm", "tid", "tim", "tinc", "qesf", "qe", "α_qintva", "γ_qintva", "α_qfa", "γ_qfa", "α_qfe", "γ_qfe", "afe", "α_qfdqfm", "γ_qfdqfm", "α_qca", "γ_qca", "α_pca", "γ_pca", "σyp", "σyg", "β_qpa", "α_qpdqpm", "γ_qpdqpm", "α_qga", "γ_qga", "α_qgdqgm", "γ_qgdqgm", "α_qia", "γ_qia", "α_qidqim", "γ_qidqim", "α_qxs", "γ_qxs", "α_qtmfsd", "α_qst", "γ_qst", "α_qes2", "γ_qes2", "α_qinv", "δ", "ρ", "pop", "ppa"]
     )
 
     fixed = merge(Dict("pfactwld" => false), fixed)
@@ -69,7 +72,7 @@ function generate_starting_values(; hSets, hData, hParameters)
         Dict(k => p_min for k ∈ ["pfactwld", "pca", "pcgdswld", "pcif", "pds", "pe", "peb", "pes", "pfa", "pfactor", "pfd", "pfe", "pfm", "pfob", "pga", "pgd", "pgm", "pgov", "pia", "pid", "pim", "pint", "pinv", "pmds", "pms", "po", "pop", "ppa", "ppd", "ppm", "ppriv", "ps", "psave", "pt", "ptrans", "pva","rorg","rore","rorc","rental","p"]),
         Dict(k => t_min for k ∈ ["tfd", "tfe", "tfm", "tgd", "tgm", "tid", "tim", "tinc", "tm", "tms", "to", "tpd", "tpm", "tx", "txs"]),
         Dict(k => α_min for k ∈ ["α_pca", "α_qca", "α_qes2", "α_qfa", "α_qfdqfm", "α_qfe", "α_qga", "α_qgdqgm", "α_qia", "α_qidqim", "α_qintva", "α_qinv", "α_qpdqpm", "α_qst", "α_qtmfsd", "α_qxs"]),
-        Dict(k => γ_min for k ∈ ["γ_pca", "γ_qca", "γ_qes2", "γ_qfa", "γ_qfdqfm", "γ_qfe", "γ_qga", "γ_qgdqgm", "γ_qia", "γ_qidqim", "γ_qintva", "γ_qpdqpm", "γ_qst", "γ_qxs"]),
+        Dict(k => γ_min for k ∈ ["afe", "γ_pca", "γ_qca", "γ_qes2", "γ_qfa", "γ_qfdqfm", "γ_qfe", "γ_qga", "γ_qgdqgm", "γ_qia", "γ_qidqim", "γ_qintva", "γ_qpdqpm", "γ_qst", "γ_qxs"]),
         Dict(k => ϵ_min for k ∈ ["ϵ_qes2", "ϵ_qfa", "ϵ_qfdqfm", "ϵ_qfe", "ϵ_qga", "ϵ_qgdqgm", "ϵ_qia", "ϵ_qidqim", "ϵ_qintva", "ϵ_qinv", "ϵ_qpdqpm", "ϵ_qxs"]),
         Dict(k => σ_min for k ∈ ["σ_qxs", "σ_vdf", "σ_vdg", "σ_vdi", "σ_vdp", "σ_vf", "σ_vff", "σ_vg", "σ_vi", "σ_vif", "σ_vp", "σ_vtwr", "σ_ρ", "σyg", "σyp"]),
         Dict("σ_qinv" => -1),

@@ -1,3 +1,33 @@
+# Open GTAP Julia
+
+Extensions to Maros Ivanic's [GlobalTradeAnalysisProjectModelV7.jl](https://github.com/mivanic/GlobalTradeAnalysisProjectModelV7.jl), the GTAP version 7 levels model in Julia. This repository is a fork of that package. The package itself is unchanged apart from one addition (factor-augmenting technical change, `afe`); everything else sits in its own folders beside it. The extensions are maintained by Matra contributors and are not endorsed by the GTAP Center.
+
+| Folder | What it adds | Status |
+| --- | --- | --- |
+| [`GTAP-RD/`](GTAP-RD/README.md) | Recursive dynamics after GTAP-RD: capital accumulation, supply curves for land and natural resources, labour efficiency that hits a GDP path, and a stepped fallback for hard years | Reviewed and tested |
+| [`GTAP-modules/`](GTAP-modules/README.md) | Choose model pieces per run, and turn each on or off | Framework reviewed and tested |
+| [`GTAP-modules/sticky-wages/`](GTAP-modules/sticky-wages/README.md) | Sticky real wages (MONASH, GTAP-MVH) | Reviewed and tested |
+| [`GTAP-modules/gtap-e/`](GTAP-modules/gtap-e/README.md) | GTAP-E energy substitution in production | Experimental |
+| [`GTAP-modules/industry-capital/`](GTAP-modules/industry-capital/README.md) | Industry-specific capital (GTAP-MVH) | Experimental |
+| [`SSP/`](SSP/README.md) | Population, labour and GDP paths to 2100 under SSP1–5 for the OCGE Data Base regions, and a loader that turns them into baseline drivers | Tested |
+| [`checks/`](checks/README.md) | Checks of all of the above on the open OCGE Data Base | Run them after any change |
+
+Data: the checks and examples use the [OCGE (Open CGE) Data Base](https://github.com/autonecon/OCGE---The-Open-CGE-Database), a GTAP-format data base for 2022 with 167 regions and 51 sectors, published under CC BY 4.0. Any GTAP-format data base works with the model.
+
+Quick start:
+
+```
+julia --project=. -e "using Pkg; Pkg.instantiate()"
+julia --project=checks -e "using Pkg; Pkg.instantiate()"
+OCGE_DATA=<folder with the OCGE gsdfset.har, gsdfpar.har, gsdfdat.har> julia --project=checks checks/run_all.jl
+```
+
+Licence: MIT, as the upstream package. Its copyright notice is kept in [`LICENSE`](LICENSE); see [`NOTICE.md`](NOTICE.md) for what was added and changed.
+
+The upstream package's own documentation follows.
+
+---
+
 # GlobalTradeAnalysisProjectModelV7
 
 [![Build Status](https://github.com/mivanic/GlobalTradeAnalysisProjectModelV7.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/mivanic/GlobalTradeAnalysisProjectModelV7.jl/actions/workflows/CI.yml?query=branch%3Amaster)

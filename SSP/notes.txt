@@ -1,0 +1,26 @@
+Labour after the last observed year follows SSP working-age growth for 213 countries; held flat (not in the working-age file): MAF, SXM, XKX
+History spliced from the Historical Reference knots: CUB GDP, ERI GDP, ESH population, GUF population, MYT population, PYF GDP, SSD GDP, TWN GDP, TWN population, YEM GDP
+ESH GDP: spliced back from 2025 onto Historical Reference knots 2020
+NCL GDP: spliced back from 2025 onto Historical Reference knots 2020
+PRK GDP: spliced back from 2025 onto Historical Reference knots 2020
+MYT GDP: spliced back from 2025 onto Historical Reference knots 2020
+GUM GDP: spliced back from 2025 onto Historical Reference knots 2020
+GUF GDP: spliced back from 2025 onto Historical Reference knots 2020
+EAZ: Tanzania's paths times its 2022 share of the union, 3.06% of GDP and 2.72% of population
+GUM gdp_mer weight: its 2022 PPP level (US dollar economy, not in the UN tables)
+VIR gdp_mer weight: its 2022 PPP level (US dollar economy, not in the UN tables)
+gdp_mer: no 2022 market-rate path, left out of gdp_mer totals: ASM, FRO, GIB, IMN, MAF, MNP
+Fill, gdp_mer only (no PPP data): 2022 weight, then peers' GDP per head times own population: AND, BMU, CYM, DMA, GRL, KNA, LIE, MCO, MHL, NRU, PLW, SMR, SXM, TCA, TUV, VGB
+Fill, gdp_mer: no 2022 weight, single-country region, PPP path used: TWN
+Fill, GDP (gdp_mer growth): Historical Reference knots to 2025, then peers' GDP per head times own population: AFG, PSE, SYR, VEN
+Fill, labour_force from own working age and the peers' participation: ABW, AIA, AND, ANT, ASM, ATG, BMU, CHI, COK, CUW, CYM, DMA, FLK, FRO, FSM, GIB, GRD, GRL, IMN, KIR, KNA, LIE, MAF, MCO, MHL, MNP, MSR, NIU, NRU, PLW, SHN, SMR, SPM, SXM, SYC, TCA, TKL, TUV, TWN, VGB, WLF, XKX
+Fill, population after its last year: growth of its peers: AND, ASM, BMU, CYM, DMA, FRO, GIB, GRL, IMN, KNA, LIE, MAF, MCO, MHL, MNP, NRU, PLW, SMR, SXM, TCA, TUV, VGB
+Fill, working_age from the SSP working-age file: AIA, ANT, CHI, COK, FLK, MSR, NIU, SHN, SPM, TKL, TWN, WLF
+Fill, working_age held flat after 2025 in the source: own population growth from then: MAF, SXM, XKX
+
+SSP2 country series left out of region totals because they do not cover every year 2017-2100:
+none
+
+Country series with no region in the concordance: ESH, GUF, MYT
+
+Coverage: every series for 5 SSPs x 167 regions x 4 variables (population, labour_force, working_age, gdp_mer). GDP at PPP is not published.

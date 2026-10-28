@@ -36,6 +36,14 @@ function build_model!(mc; max_iter=50, constr_viol_tol=1e-8, bound_push=1e-15, c
     δ_act = .!isnan.(mc.data["γ_qca"]) .&& mc.data["γ_qca"] .!= 0
 
 
+    # Containers saved before afe existed: no factor-augmenting change, held fixed
+    if !haskey(mc.data, "afe")
+        mc.data["afe"] = NamedArray(ones(size(mc.data["α_qfe"])), names(mc.data["α_qfe"]))
+    end
+    if !haskey(mc.fixed, "afe")
+        mc.fixed["afe"] = NamedArray(trues(size(mc.data["α_qfe"])), names(mc.data["α_qfe"]))
+    end
+
     # Read  sets
     (; reg, comm, marg, acts, endw, endwc, endws, endwm, endwms, endwf) = NamedTuple(Dict(Symbol(k) => mc.sets[k] for k ∈ keys(mc.sets)))
 
@@ -188,6 +196,8 @@ function build_model!(mc; max_iter=50, constr_viol_tol=1e-8, bound_push=1e-15, c
             γ_qfa[acts, reg]
             α_qfe[endw, acts, reg]
             γ_qfe[acts, reg]
+            # Factor-augmenting technical change (GTAP afe), 1 in the base
+            afe[endw, acts, reg]
             α_qfdqfm[["dom", "imp"], comm, acts, reg]
             γ_qfdqfm[comm, acts, reg]
             α_qca[comm, acts, reg]
@@ -305,6 +315,7 @@ function build_model!(mc; max_iter=50, constr_viol_tol=1e-8, bound_push=1e-15, c
     delete.(mc.model, Array(peb)[.!δ_evfp])
     delete.(mc.model, Array(α_qes2[endws, :, :])[.!δ_evfp[endws, :, :]])
     delete.(mc.model, Array(α_qfe)[.!δ_evfp])
+    delete.(mc.model, Array(afe)[.!δ_evfp])
     delete.(mc.model, Array(qesf[endwf, acts, reg])[.!δ_evfp[endwf, acts, reg]])
     #delete.(mc.model, Array(evos)[.!δ_evfp])
     #delete.(mc.model, Array(evfp)[.!δ_evfp])
@@ -421,7 +432,7 @@ function build_model!(mc; max_iter=50, constr_viol_tol=1e-8, bound_push=1e-15, c
             # Firms (second nest)
             e_qfa[a=acts, r=reg; δ_act[a, r]], log.(Vector(qfa[:, a, r])[δ_qfa[:, a, r]]) .== log.(ces(qint[a, r], Vector(pfa[:, a, r])[δ_qfa[:, a, r]], Vector(α_qfa[:, a, r])[δ_qfa[:, a, r]], esubc[a, r], γ_qfa[a, r]))
             e_pint[a=acts, r=reg; δ_act[a, r]], log.(qint[a, r] * pint[a, r]) == log.(sum(Vector(pfa[:, a, r] .* qfa[:, a, r])[δ_qfa[:, a, r]]))
-            e_qfe[a=acts, r=reg; δ_act[a, r]], log.(Vector(qfe[:, a, r])[δ_evfp[:, a, r]]) .== log.(ces(qva[a, r], Vector(pfe[:, a, r])[δ_evfp[:, a, r]], Vector(α_qfe[:, a, r])[δ_evfp[:, a, r]], esubva[a, r], γ_qfe[a, r]))
+            e_qfe[a=acts, r=reg; δ_act[a, r]], log.(Vector(qfe[:, a, r] .* afe[:, a, r])[δ_evfp[:, a, r]]) .== log.(ces(qva[a, r], Vector(pfe[:, a, r] ./ afe[:, a, r])[δ_evfp[:, a, r]], Vector(α_qfe[:, a, r])[δ_evfp[:, a, r]], esubva[a, r], γ_qfe[a, r]))
 
             e_pva[a=acts, r=reg; δ_act[a, r]], log.(qva[a, r] * pva[a, r]) == log.(sum(Vector(pfe[:, a, r] .* qfe[:, a, r])[δ_evfp[:, a, r]]))
             e_qfdqfm[c=comm, a=acts, r=reg; δ_qfa[c, a, r] && δ_act[a, r]], log.([qfd[c, a, r], qfm[c, a, r]]) .== log.(ces(qfa[c, a, r], [pfd[c, a, r], pfm[c, a, r]], α_qfdqfm[:, c, a, r], esubd[c, r], γ_qfdqfm[c, a, r]))
